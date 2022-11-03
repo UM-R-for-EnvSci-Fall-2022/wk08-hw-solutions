@@ -1,0 +1,153 @@
+---
+title: "Week 8 Homework"
+author: "Jose Luis Rodriguez Gil"
+date: "01/11/2022"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r loading_packages}
+
+library(tidyverse)
+library(janitor)
+library(here)
+
+library(viridis)
+library(patchwork)
+
+```
+
+# Theme
+
+```{r}
+
+source(here("functions", "theme_pepe_week_8.r"))
+
+theme_set(theme_pepe_week_8())  #Sets the theme for all ggplot plots in this .Rmd file (no need to call it in the plot itself)
+
+
+```
+
+
+# Data
+
+```{r}
+
+argentina_data_original <- read_delim(here("data", "argentina_data_homework.txt"))
+
+argentina_data_original
+
+```
+
+
+# Data processing
+
+```{r}
+
+argentina_data <- argentina_data_original %>% 
+  clean_names() %>% 
+  pivot_longer(cols = c(l_acuta, h_similis, u_uruguayensis, n_succinea), 
+               names_to = "species",
+               values_to = "counts")
+
+
+argentina_data
+
+```
+
+
+# Plot
+
+
+```{r}
+argentina_species_plot <- argentina_data %>% 
+  ggplot +
+  facet_wrap(~season) +
+  geom_col(aes(x = counts, y = site, fill = species)) +
+  scale_fill_viridis(discrete = TRUE) +
+  theme(legend.position = "bottom")
+  
+
+
+argentina_species_plot
+
+```
+
+```{r}
+
+argentina_sand_plot <- argentina_data %>% 
+  ggplot +
+  # facet_wrap(~season) +
+  geom_point(aes(x = med_sand, y = site, colour = transect_location)) +
+  scale_colour_brewer(palette = "Set1") +
+  theme(legend.position = "bottom") +
+  labs(x = "Proportion of medium-size sand",
+       y = "Site")
+
+
+argentina_sand_plot
+
+
+```
+
+
+```{r}
+
+combined_plot <- argentina_species_plot + argentina_sand_plot +
+   plot_layout(ncol = 1) +             # You can specify the number of columns and rows
+  plot_annotation(tag_levels = c('A', '1'))
+  
+  
+combined_plot
+
+```
+
+
+
+
+```{r}
+
+ggsave(here("figures/figures_to_replicate/argentina_figure.png"), combined_plot, width = 190, height = 200, units = "mm")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

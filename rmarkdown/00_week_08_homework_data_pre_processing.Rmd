@@ -1,0 +1,60 @@
+---
+title: "Week 8 Homework - Data pre-processing"
+author: "Jose Luis Rodriguez Gil"
+date: "01/11/2022"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r loading_packages}
+
+library(tidyverse)
+library(janitor)
+library(here)
+
+```
+
+# Data
+
+The purpuse of his `.Rmd` file is just to edit the original *Argentina* dataset from the [Zuur et al book](https://highstat.com/index.php/analysing-ecological-data) so as to make it a bit moreuser-friendly and clear
+
+```{r}
+
+argentina_data_original <- read_delim(here("data", "Argentina.txt"))
+
+argentina_data_original
+
+```
+
+
+```{r}
+
+argentina_data <- argentina_data_original %>% 
+  mutate(Season = case_when(
+    Season == 1 ~ "Fall",
+    Season == 2 ~ "Spring"
+  )) %>% 
+  mutate(River = case_when(
+    River == 0 ~ "Eastern sector",
+    River == 1 ~ "Western sector"
+  )) %>% 
+  rename(TransectLocation = River) %>% 
+  rename(Site = data)
+
+argentina_data
+
+```
+
+
+
+```{r}
+
+write_delim(argentina_data, here("data", "argentina_data_homework.txt"), delim = ",")
+
+```
+
