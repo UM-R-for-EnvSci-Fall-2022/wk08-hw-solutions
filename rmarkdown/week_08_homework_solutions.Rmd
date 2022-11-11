@@ -4,6 +4,7 @@ author: "Jose Luis Rodriguez Gil"
 date: "01/11/2022"
 output: 
   html_document:
+    number_sections: true
     keep_md: true
 ---
 
